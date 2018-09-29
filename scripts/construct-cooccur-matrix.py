@@ -13,14 +13,6 @@ def weigh(x, x_max=100, alpha=0.75):
 	return y
 
 
-def weigh_(x, x_max=100, alpha=0.75):
-	"""The weighing function f applied to X_ij."""
-	if x > x_max:
-		return 1.0
-	else:
-		return (x / x_max)**alpha
-
-
 def construct_sparse_cooccurrence_matrix(path, w2i):
 	"""Constructs a sparse co-occurrence matrix.
 
@@ -66,32 +58,31 @@ def construct_sparse_cooccurrence_matrix(path, w2i):
 		return X, logX, fX
 
 
-# def load_cooccurrence_matrix(path, w2i):
-# 	n = len(w2i)
-# 	print("Making dense co-occurrence matrix of shape [{},{}]".format(n,n))
-#
-# 	X = np.zeros((n, n), dtype=np.float32)
-#
-# 	with open(path, 'r') as f:
-# 		npairs = int(f.readline())
-# 		for l, line in enumerate(f):
-# 			w, v, count = line.split()
-# 			i, j = w2i[w], w2i[v]
-# 			X[i,j] = X[j,i] = float(count)
-#
-# 			if l%10000 == 0:
-# 				print('Processed {} pairs ({:.0f}%).'.format(l, 100*l/npairs), end='\r')
-#
-# 		print('Processed {} pairs ({:.0f}%).'.format(l, 100*l/npairs))
-# 		print('Constructed dense X.')
-#
-# 		logX = np.log(1 + X)
-# 		print('Constructed dense logX.')
-#
-# 		fX = weigh(X)
-# 		print('Constructed dense fX.')
-#
-# 	return X, logX, fX
+def construct_dense_cooccurrence_matrix_slow(path, w2i):
+	"""Constructs a dense co-occurrence matrix."""
+	n = len(w2i)
+	X = np.zeros((n, n), dtype=np.float32)
+	print("Making dense co-occurrence matrix of shape [{},{}]".format(n,n))
+	with open(path, 'r') as f:
+		npairs = int(f.readline())
+		for l, line in enumerate(f):
+			w, v, count = line.split()
+			i, j = w2i[w], w2i[v]
+			X[i,j] = X[j,i] = float(count)
+
+			if l%10000 == 0:
+				print('Processed {} pairs ({:.0f}%).'.format(l, 100*l/npairs), end='\r')
+
+		print('Processed {} pairs ({:.0f}%).'.format(l, 100*l/npairs))
+		print('Constructed dense X.')
+
+		logX = np.log(1 + X)
+		print('Constructed dense logX.')
+
+		fX = weigh(X)
+		print('Constructed dense fX.')
+
+	return X, logX, fX
 
 
 if __name__ == '__main__':
