@@ -11,6 +11,6 @@ models
 pairs
 vec
 vocab
+plots
 
-plots/*.ipynb
 *.ipynb

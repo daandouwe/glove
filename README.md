@@ -21,7 +21,7 @@ mkdir vec
 ./main.py train --name text8 --emb-dim 100 --out-dir vec
 ```
 
-To plot (a number of) these embedings, use:
+To plot (a number of) these vectors, use:
 ./main.py plot --vec-dir vec/text8.100d.txt
 
 # Requirements
