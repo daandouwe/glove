@@ -26,7 +26,6 @@ def construct_sparse_cooccurrence_matrix(path, w2i):
 
 	Constructs in CSR format from the counts saved in the test file at `path`.
 	"""
-
 	n = len(w2i)
 	print('Constructing sparse co-occurrence matrix (CSR) of shape [{},{}]'.format(n,n))
 
