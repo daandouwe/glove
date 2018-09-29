@@ -22,6 +22,8 @@ mkdir vec
 
 To plot (a number of) these vectors, use:
 ./main.py plot --vec-dir vec/text8.100d.txt
+The plots are saved as html in `plots`. An example can be seen [here](https://github.com/daandouwe/glove/blob/master/plots/text8.10k.50d.tsne.html). (Github does not render html files. To render, download and open, or use [this link](http://htmlpreview.github.com/?https://github.com/daandouwe/glove/blob/master/plots/text8.10k.50d.tsne.html).)
+text8.10k.50dim.tsne.html
 
 # Requirements
 ```bash
