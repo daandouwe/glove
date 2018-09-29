@@ -13,14 +13,14 @@ from util import load_vectors, load_vocabulary
 
 
 def main(args):
-    num_words = 500
+    num_words = 1000
 
     print(f'Reading vectors from `{args.vec_path}`...')
     embeddings, w2i, i2w = load_vectors(args.vec_path, gensim=args.gensim_format)
     vocab_path = os.path.join(args.vocab_dir, f'{args.name}.vocab')
 
     embeddings = embeddings[:num_words, :]
-    most_common_words = [word for word, _ in Counter(w2i).most_common(num_words)]
+    most_common_words = [i2w[i] for i in range(num_words)]
 
     print(f'Loaded {embeddings.shape[0]} vectors.')
     print(f'Plotting t-SNE for {num_words} vectors.')
