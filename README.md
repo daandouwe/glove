@@ -35,4 +35,4 @@ sklearn   # for t-sne plot
 ## TODO
 - [ ] Add vector evaluation tests.
 - [ ] Why so slow on GPU?
-- [ ] Hogwild training, for fun.
+- [X] Hogwild training, for fun.
