@@ -1,4 +1,4 @@
-# GloVe
+# GloVe embeddings in PyTorch
 An implementation of Global Vectors (GloVe) in PyTorch.
 
 ## Data
@@ -28,8 +28,8 @@ The plots are saved as html in `plots`. An example can be seen [here](https://gi
 ```bash
 torch==0.4.1
 numpy
-bokeh    # For t-SNE plots
-sklearn  # For t-SNE plots
+bokeh     # for t-sne plot
+sklearn   # for t-sne plot
 ```
 
 ## TODO
