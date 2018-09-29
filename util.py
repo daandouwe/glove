@@ -30,7 +30,7 @@ def load_matrix(path):
 def write_vectors(embeddings, path, dim, i2w, gensim=True):
 	with open(path, 'w') as f:
 		if gensim:
-			# header needed for gensim reading in of vectors
+			# Header needed to load vector file with gensim.
 			print(f'{len(i2w)} {dim}', file=f)
 		for i, word in i2w.items():
 			vec = embeddings[i, :]
