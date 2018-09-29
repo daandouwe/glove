@@ -51,15 +51,16 @@ def main(args):
     # Construct model and optimizer.
     model = GloVe(vocab_size=vocab_size, emb_dim=args.emb_dim, sparse=True).to(device)
     optimizer = torch.optim.SparseAdam(model.parameters(), lr=args.lr)
-    schedule = ReduceLROnPlateau(optimizer, threshold=1e-4, patience=50, factor=.5, verbose=True)
 
     print
     losses = []
     logs = [['step', 'loss']]
+    lr = args.lr
     epoch = 0
+    prev_loss = np.inf
     t0 = time.time()
     try:
-        for step in range(1, args.train_steps+1):
+        for step in range(1, args.num_updates+1):
 
             # Sample a random batch.
             idx = np.random.randint(0, high=vocab_size, size=(args.batch_size,))
@@ -92,10 +93,14 @@ def main(args):
                 ls = losses[-args.print_every:]
                 avg_loss = sum(ls) / args.print_every
                 logs.append([step, avg_loss])
-                print('| epoch {:4d} | step {:6d} | loss {:.4f} | pairs/sec {:.1f}'.format(
-                    epoch, step, avg_loss, args.print_every * args.batch_size / (time.time() - t0)))
+                print('| epoch {:4d} | step {:6d} | loss {:.4f} | pairs/sec {:.1f} | lr {:.1e}'.format(
+                    epoch, step, avg_loss, args.print_every * args.batch_size / (time.time() - t0), lr))
                 t0 = time.time()
-
+                if args.use_schedule:
+                    if avg_loss >= prev_loss:
+                        lr /= 4.0
+                        optimizer = torch.optim.SparseAdam(model.parameters(), lr=lr)
+                    prev_loss = avg_loss
             if step % args.save_every == 0:
                 # torch.save(model.state_dict(), model_path)
                 with open('csv/losses.csv', 'w') as f:
@@ -105,8 +110,6 @@ def main(args):
             k, _ = divmod(step * args.batch_size, vocab_size)
             if k > epoch:
                 epoch = k
-                if args.use_schedule:
-                    schedule.step(loss)
     except KeyboardInterrupt:
         print('-' * 89)
         print('Exiting from training early')

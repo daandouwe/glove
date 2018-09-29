@@ -14,9 +14,9 @@ class GloVe(nn.Module):
         self.embedding.weight.data.uniform_(-initrange, initrange)
         self.bias.weight.data.uniform_(-initrange, initrange)
 
-    def forward(self, indices, log_x, weights):
+    def forward(self, indices, logx, weights):
         w = self.embedding(indices)
         b = self.bias(indices)
         out = w @ torch.t(w) + b + torch.t(b)
-        loss = torch.mean(weights * (out - log_x)**2)
+        loss = torch.mean(weights * (out - logx)**2)
         return loss
