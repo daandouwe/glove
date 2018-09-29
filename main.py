@@ -4,12 +4,13 @@ import argparse
 
 import train
 import plot
+import hogwild
 
 
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('mode', choices=['train', 'plot', 'eval'])
+    parser.add_argument('mode', choices=['train', 'plot', 'eval', 'hogwild'])
 
     parser.add_argument('-v', '--verbose', action='store_true')
 
@@ -34,7 +35,7 @@ def main():
                         help='dimension of vectors')
 
     # Train arguments.
-    parser.add_argument('--train-steps', type=int, default=10000,
+    parser.add_argument('--num-updates', type=int, default=10000,
                         help='number of parameter updates')
     parser.add_argument('--batch-size', type=int, default=512,
                         help='Size of minibatches.')
@@ -55,6 +56,8 @@ def main():
         train.main(args)
     if args.mode == 'plot':
         plot.main(args)
+    if args.mode == 'hogwild':
+        hogwild.main(args)
 
 
 if __name__ == '__main__':
