@@ -1,5 +1,5 @@
 # GloVe embeddings in PyTorch
-An implementation of Global Vectors (GloVe) in PyTorch.
+A PyTorch implementation of [GloVe: Global Vectors for Word Representation](https://nlp.stanford.edu/pubs/glove.pdf).
 
 ## Data
 We can use `text8` and `text9`. To get the data, run:
