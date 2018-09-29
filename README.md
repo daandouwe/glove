@@ -10,8 +10,7 @@ mkdir data
 To obtain the cooccurence counts and construct matrices, run:
 ```bash
 mkdir vocab pairs cooccur
-./get-counts.py
-./construct-matrices.py
+./cooccur.sh
 ```
 
 ## Usage
@@ -28,9 +27,11 @@ To plot (a number of) these vectors, use:
 ```bash
 torch==0.4.1
 numpy
-
+bokeh    # For t-SNE plots
+sklearn  # For t-SNE plots
 ```
 
 ## TODO
 - [ ] Add vector evaluation tests.
 - [ ] Why so slow on GPU?
+- [ ] Hogwild training, for fun.
