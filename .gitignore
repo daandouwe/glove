@@ -1,0 +1,16 @@
+__pycache__
+
+.ipynb_checkpoints
+.remote-sync.json
+.DS_store
+
+cooccur
+csv
+doc
+models
+pairs
+vec
+vocab
+
+plots/*.ipynb
+*.ipynb
