@@ -5,31 +5,30 @@ from scipy.sparse import dok_matrix, csr_matrix, coo_matrix
 
 from util import load_vocabulary, save_matrix
 
+
 def weigh(x, x_max=100, alpha=0.75):
-	"""
-	The weighing function f applied to X_ij
-	"""
+	"""The weighing function f applied to X_ij."""
 	y = (x / x_max)**alpha
 	y[x > x_max] = 1.
 	return y
 
+
 def weigh_(x, x_max=100, alpha=0.75):
-	"""
-	The weighing function f applied to X_ij
-	"""
+	"""The weighing function f applied to X_ij."""
 	if x > x_max:
 		return 1.0
 	else:
 		return (x / x_max)**alpha
 
+
 def construct_sparse_cooccurrence_matrix(path, w2i):
-	"""
-	Constructs a co-occurrence sparse matrix in CSR format from the counts saved in the
-	test file at `path`.
+	"""Constructs a sparse co-occurrence matrix.
+
+	Constructs in CSR format from the counts saved in the test file at `path`.
 	"""
 
 	n = len(w2i)
-	print("Constructing sparse co-occurrence matrix (CSR) of shape [{},{}]".format(n,n))
+	print('Constructing sparse co-occurrence matrix (CSR) of shape [{},{}]'.format(n,n))
 
 	with open(path, 'r') as f:
 		npairs = int(f.readline())
@@ -51,7 +50,8 @@ def construct_sparse_cooccurrence_matrix(path, w2i):
 			k += 2
 
 			if l%100000 == 0:
-				print('Reading counts to matrix: {:.0f}% ({}/{}).'.format(100*l/npairs, l, npairs), end='\r')
+				print('Reading counts to matrix: {:.0f}% ({}/{}).'.format(
+					100*l/npairs, l, npairs), end='\r')
 
 		print('Reading counts to matrix: {:.0f}% ({}/{}).'.format(100*l/npairs, l, npairs))
 
@@ -94,20 +94,21 @@ def construct_sparse_cooccurrence_matrix(path, w2i):
 #
 # 	return X, logX, fX
 
+
 if __name__ == '__main__':
-
 	parser = argparse.ArgumentParser()
-
-	parser.add_argument('vocab_path', type=str, help='Input path for vocabulary.')
-	parser.add_argument('cooccur_path', type=str, help='Input path for cooccurence counts.')
-	parser.add_argument('matrix_path', type=str, help='Output path for cooccurence matrix.')
-
+	parser.add_argument('vocab_path', type=str,
+						help='input path for vocabulary')
+	parser.add_argument('cooccur_path', type=str,
+						help='input path for cooccurence counts')
+	parser.add_argument('matrix_path', type=str,
+						help='output path for cooccurence matrix')
 	args = parser.parse_args()
 
 	w2i, i2w = load_vocabulary(args.vocab_path)
 	X, logX, fX = construct_sparse_cooccurrence_matrix(args.cooccur_path, w2i)
 
-	print("Saving co-occurrence matrices at '{}'.".format(args.matrix_path))
+	print('Saving co-occurrence matrices at '{}'.'.format(args.matrix_path))
 	save_matrix(args.matrix_path + 'x', X)
 	print('Saved X')
 	save_matrix(args.matrix_path + 'logx', logX)

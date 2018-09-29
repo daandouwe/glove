@@ -86,16 +86,20 @@ if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser()
 
-	parser.add_argument('corpus_path', type=str, help='Input path for corpus.')
-	parser.add_argument('vocab_path', type=str, help='Input path for vocabulary.')
+	parser.add_argument('corpus_path', type=str,
+						help='input path for corpus')
+	parser.add_argument('vocab_path', type=str,
+						help='input path for vocabulary')
 
-	parser.add_argument('-v', '--verbose', action='store_true', help='Printing results.')
+	parser.add_argument('-v', '--verbose', action='store_true',
+						help='printing results')
 
-	parser.add_argument('--min_count', type=int, default=5, help='Minimum word count.')
-	parser.add_argument('--window_size', type=int, default=15, help='Context window size.')
-	parser.add_argument('--context', type=str, default='default',
-						choices=['default', 'dynamic', 'harmonic'],
-						help='Type of context: defualt, dynamic (SGNS), harmonic (GloVe).')
+	parser.add_argument('--min_count', type=int, default=5,
+						help='minimum word count')
+	parser.add_argument('--window_size', type=int, default=15,
+						help='context window size')
+	parser.add_argument('--context', default='default', choices=['default', 'dynamic', 'harmonic'],
+						help='type of context: defualt, dynamic (sgns), harmonic (glove)')
 
 	args = parser.parse_args()
 
