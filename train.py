@@ -9,7 +9,7 @@ import torch.nn as nn
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 import matplotlib.pyplot as plt
 
-from util import load_vocabulary, save_matrix, load_matrix, write_vectors
+from util import load_vocabulary, load_matrix, write_vectors
 from model import GloVe
 
 
@@ -102,7 +102,6 @@ def main(args):
                         optimizer = torch.optim.SparseAdam(model.parameters(), lr=lr)
                     prev_loss = avg_loss
             if step % args.save_every == 0:
-                # torch.save(model.state_dict(), model_path)
                 with open('csv/losses.csv', 'w') as f:
                    writer = csv.writer(f)
                    writer.writerows(logs)

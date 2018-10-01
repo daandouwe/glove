@@ -12,8 +12,6 @@ def main():
 
     parser.add_argument('mode', choices=['train', 'plot', 'eval', 'hogwild'])
 
-    parser.add_argument('-v', '--verbose', action='store_true')
-
     # IO arguments.
     parser.add_argument('--name', type=str, default='text8.10k',
                         help='name for model')
