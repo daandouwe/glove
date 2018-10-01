@@ -36,7 +36,7 @@ def main():
     parser.add_argument('--num-updates', type=int, default=10000,
                         help='number of parameter updates')
     parser.add_argument('--batch-size', type=int, default=512,
-                        help='Size of minibatches.')
+                        help='size of minibatches')
     parser.add_argument('--lr', type=float, default=1e-2,
                         help='learning rate')
     parser.add_argument('--seed', type=int, default=42,
@@ -47,6 +47,12 @@ def main():
                         help='how often to save the model parameters')
     parser.add_argument('--print-every', type=int, default=100,
                         help='how often to print loss to screen')
+
+    # Plot arguments.
+    parser.add_argument('--tsne', action='store_true',
+                        help='plot tsne')
+    parser.add_argument('--matrices', action='store_true',
+                        help='plot matrices and decomposition')
 
     args = parser.parse_args()
 
