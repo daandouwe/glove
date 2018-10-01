@@ -3,16 +3,30 @@ from collections import Counter
 
 import torch
 import numpy as np
+
 from sklearn.cluster import KMeans
 from sklearn.manifold import TSNE
+
 from bokeh.models import ColumnDataSource, LabelSet
 from bokeh.plotting import figure, save, output_file
 from bokeh.palettes import d3
 
-from util import load_vectors, load_vocabulary
+import matplotlib.pyplot as plt
+
+from util import load_vectors, load_vocabulary, load_matrix
 
 
 def main(args):
+    if args.tsne:
+        tsne(args)
+    elif args.matrices:
+        plot_decomposition(args)
+    else:
+        exit('Specify plotting.')
+
+
+def tsne(args):
+    """Plots t-SNE."""
     num_words = 1000
 
     print(f'Reading vectors from `{args.vec_path}`...')
@@ -84,3 +98,33 @@ def emb_scatter(data, names, model_name, perplexity=30.0, k=20):
     output_file(output_path)
     print(f'Saved plot in `{output_path}`.')
     save(fig)
+
+
+def plot_decomposition(args):
+    print(f'Reading vectors from `{args.vec_path}`...')
+    embeddings, w2i, i2w = load_vectors(args.vec_path, gensim=args.gensim_format)
+
+    matrix_path = os.path.join(args.matrix_dir, f'{args.name}')
+    logX = load_matrix(matrix_path + '.logx.npz')
+    fX = load_matrix(matrix_path + '.fx.npz')
+    logX, fX = logX.todense(), fX.todense()
+
+    plt.imshow(embeddings)
+    plt.savefig(os.path.join('plots', 'emb.pdf'))
+    plt.clf()
+
+    plt.imshow(embeddings.T)
+    plt.savefig(os.path.join('plots', 'emb.t.pdf'))
+    plt.clf()
+
+    plt.imshow(logX)
+    plt.savefig(os.path.join('plots', 'logX.pdf'))
+    plt.clf()
+
+    plt.imshow(fX * logX)
+    plt.savefig(os.path.join('plots', 'fX.logX.pdf'))
+    plt.clf()
+
+    plt.imshow(embeddings @ embeddings.T)
+    plt.savefig(os.path.join('plots', 'logX_.pdf'))
+    plt.clf()
