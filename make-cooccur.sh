@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 CORPUS=data/fil8
-NAME=testing
+NAME=text8
 VOCAB_SIZE=10000
 WINDOW_SIZE=15
 CONTEXT=harmonic
