@@ -3,6 +3,8 @@ import sys
 import argparse
 from collections import Counter
 
+from tqdm import tqdm
+
 
 def harmonic(window_size):
 	fun = lambda x : (window_size - x) / window_size
@@ -28,65 +30,54 @@ def get_context_function(context, window_size):
 		return default()
 
 
-def load_vocabulary(args):
+def load_vocabulary(vocab_path):
 	vocab = dict()
 	with open(vocab_path, 'r') as f:
-  		# First line holds total token and vocabulary count counts.
-		vocab_size, num_tokens = f.readline().split()
 		for line in f:
 			word, count = line.split()
 			vocab[word] = int(count)
-	return vocab, vocab_size, int(num_tokens)
+	return vocab
+
+
+def write_pairs(counts, path):
+	# Sort the pairs.
+	with open(path, 'w') as f:
+		print(len(counts), file=f)
+		for (word, context), count in counts.most_common():
+			print(word, context, round(count, 1), file=f)
 
 
 def main(args):
-	vocab, vocab_size, num_tokens = load_vocabulary(args.vocab_path)
-	context_function = get_context_function(args.context_function, args.window_size)
+	vocab = load_vocabulary(args.vocab_path)
+	context_function = get_context_function(args.context, args.window_size)
 
-	if args.verbose:
-		print('Counting cooccurences...', file=sys.stderr)
-		print('vocabulary size: {}'.format(vocab_size), file=sys.stderr)
-		print('window size: {}'.format(args.window_size), file=sys.stderr)
-		print('context: {}'.format(args.context), file=sys.stderr)
+	print('Counting cooccurences...')
+	print('vocabulary size: {}'.format(len(vocab)))
+	print('window size: {}'.format(args.window_size))
+	print('context: {}'.format(args.context))
 
 	counts = Counter()
 	with open(args.corpus_path, 'r') as f:
 		step = 0
-		for line in f:
-			words = [w if w in vocab else None for w in line.strip().split()]
-			for i, w in enumerate(words):
-				step += 1
-				if w is not None:
-					left_context = [v for v in words[max(0, i-args.window_size) : i]]
-					right_context = [v for v in words[i+1 : i+args.window_size+1]]
+		words = [[w if w in vocab else None for w in line.strip().split()] for line in f]
+	words = words[0] if len(words) == 1 else words
+	for i, w in enumerate(tqdm(words)):
+		step += 1
+		if w is not None:
+			left_context = [v for v in words[max(0, i-args.window_size) : i]]
+			right_context = [v for v in words[i+1 : i+args.window_size+1]]
 
-					for dist, v in enumerate(reversed(left_context), 1):
-						if v is not None:
-							word_pair = tuple(sorted([w, v]))
-							counts[word_pair] += context_function(dist)
+			for dist, v in enumerate(reversed(left_context), 1):
+				if v is not None:
+					word_pair = tuple(sorted([w, v]))
+					counts[word_pair] += context_function(dist)
 
-					for dist, v in enumerate(right_context, 1):
-						if v is not None:
-							word_pair = tuple(sorted([w, v]))
-							counts[word_pair] += context_function(dist)
+			for dist, v in enumerate(right_context, 1):
+				if v is not None:
+					word_pair = tuple(sorted([w, v]))
+					counts[word_pair] += context_function(dist)
 
-				if args.verbose and step%10000==0:
-					print('Processed {}/{} tokens ({:.0f}%).'.format(step, num_tokens, 100*step/num_tokens), file=sys.stderr, end='\r')
-
-		print('Processed {}/{} tokens ({:.0f}%).'.format(step, num_tokens, 100*step/num_tokens), file=sys.stderr)
-		write_pairs(counts)
-
-
-def write_pairs(counts):
-	pairs = counts.most_common()
-	print(len(pairs))
-	for i, pair in enumerate(pairs, 1):
-		(word, context), count = pair
-		print('{} {} {:.1f}'.format(word, context, count))
-
-		if args.verbose and i%10000==0:
-			print('Written {}/{} pairs ({:.0f}%).'.format(i, len(pairs), 100*i/len(pairs)), file=sys.stderr, end='\r')
-	print('Written {}/{} pairs ({:.0f}%).'.format(i, len(pairs), 100*i/len(pairs)), file=sys.stderr)
+		write_pairs(counts, args.out)
 
 
 if __name__ == "__main__":
@@ -98,12 +89,9 @@ if __name__ == "__main__":
 	parser.add_argument('vocab_path', type=str,
 						help='input path for vocabulary')
 
-	parser.add_argument('-v', '--verbose', action='store_true',
-						help='printing results')
-
-	parser.add_argument('--min_count', type=int, default=5,
-						help='minimum word count')
-	parser.add_argument('--window_size', type=int, default=15,
+	parser.add_argument('--out', type=str, default='pairs.txt',
+						help='where to print the pairs')
+	parser.add_argument('--window-size', type=int, default=15,
 						help='context window size')
 	parser.add_argument('--context', default='default', choices=['default', 'dynamic', 'harmonic'],
 						help='type of context: defualt, dynamic (sgns), harmonic (glove)')
