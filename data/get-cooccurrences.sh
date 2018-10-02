@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 CORPUS=fil8
-NAME=text8
+NAME=text8.10k
 VOCAB_SIZE=10000
 WINDOW_SIZE=15
 CONTEXT=harmonic
