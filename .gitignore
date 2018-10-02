@@ -4,16 +4,16 @@ __pycache__
 .remote-sync.json
 .DS_store
 
-cooccur
 csv
 doc
 models
-pairs
 vec
-vocab
 
 plots/*.ipynb
 *.ipynb
 
+data/cooccur
 data/enwik8
 data/fil8
+data/vocab
+data/pairs
