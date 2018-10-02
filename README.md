@@ -13,18 +13,19 @@ cd data
 mkdir vocab pairs cooccur
 ./get-cooccurrences.sh
 ```
+By default this script construct a vocabulary size of the 10,000 most common words.
 
 ## Usage
-To train 100 dimensional vectors on the cooccurence matrices constructed above, run:
+To train 100 dimensional vectors on the cooccurrence matrices constructed above, run:
 ```bash
 mkdir vec
-./main.py train --name text8 --emb-dim 100 --out-dir vec
+./main.py train --name text8.10k --emb-dim 100 --out-dir vec
 ```
-The vectors are saved in `vec/text8.100d.txt`.
+The vectors are saved in `vec/text8.10k.100d.txt`.
 
 To plot (a number of) these vectors, use:
 ```bash
-./main.py plot --vec-dir vec/text8.100d.txt
+./main.py plot --vec-dir vec/text8.10k.100d.txt
 ```
 The plots are saved as html in `plots`. An example can be seen [here](https://github.com/daandouwe/glove/blob/master/plots). (Github does not render html files. To render, download and open, or use [this link](http://htmlpreview.github.com/?https://raw.githubusercontent.com/daandouwe/glove/master/plots/text8.10k.50d.tsne.html).)
 
