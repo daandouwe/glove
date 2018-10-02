@@ -13,7 +13,7 @@ def main():
     parser.add_argument('mode', choices=['train', 'plot', 'eval', 'hogwild'])
 
     # IO arguments.
-    parser.add_argument('--name', type=str, default='text8',
+    parser.add_argument('--name', type=str, default='text8.10k',
                         help='name for model')
     parser.add_argument('--vocab-dir', type=str, default='data/vocab',
                         help='input path for vocabulary')

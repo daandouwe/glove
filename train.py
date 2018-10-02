@@ -24,36 +24,35 @@ def main(args):
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
 
+    # Construct paths.
     vocab_path = os.path.join(args.vocab_dir, f'{args.name}.vocab')
     matrix_path = os.path.join(args.matrix_dir, f'{args.name}')
     model_path = os.path.join(args.model_dir, f'{args.name}.model.dict')
     log_path = os.path.join(args.log_dir, 'losses.csv')
     out_path = os.path.join(args.out_dir, args.name)
 
-    # Loading co-occurrence data.
+    # Load vocabulary.
     w2i, i2w = load_vocabulary(vocab_path)
     vocab_size = len(i2w)
     print(f'Loaded vocabulary of size {vocab_size}.')
     sparse = bool(vocab_size > 20000)
-
+    # Load co-occurrence data.
     print('Loading co-occurrence matrices...')
     logX = load_matrix(matrix_path + '.logx.npz')
     print('Loaded logX.')
     fX = load_matrix(matrix_path + '.fx.npz')
     print('Loaded fX.')
-
     type = 'sparse' if sparse else 'dense'
     print(f'Using {type} cooccurence matrices during training.')
     if not sparse:
         logX = logX.todense()
         fX = fX.todense()
 
-
     # Construct model and optimizer.
     model = GloVe(vocab_size=vocab_size, emb_dim=args.emb_dim, sparse=True).to(device)
     optimizer = torch.optim.SparseAdam(model.parameters(), lr=args.lr)
 
-    print
+    print('Training...')
     losses = []
     logs = [('step', 'loss')]
     lr = args.lr
