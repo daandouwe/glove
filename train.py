@@ -27,6 +27,7 @@ def main(args):
     vocab_path = os.path.join(args.vocab_dir, f'{args.name}.vocab')
     matrix_path = os.path.join(args.matrix_dir, f'{args.name}')
     model_path = os.path.join(args.model_dir, f'{args.name}.model.dict')
+    log_path = os.path.join(args.log_dir, 'losses.csv')
     out_path = os.path.join(args.out_dir, args.name)
 
     # Loading co-occurrence data.
@@ -54,7 +55,7 @@ def main(args):
 
     print
     losses = []
-    logs = [['step', 'loss']]
+    logs = [('step', 'loss')]
     lr = args.lr
     epoch = 0
     prev_loss = np.inf
@@ -92,7 +93,7 @@ def main(args):
             if step % args.print_every == 0:
                 ls = losses[-args.print_every:]
                 avg_loss = sum(ls) / args.print_every
-                logs.append([step, avg_loss])
+                logs.append((step, avg_loss))
                 print('| epoch {:4d} | step {:6d} | loss {:.4f} | pairs/sec {:.1f} | lr {:.1e}'.format(
                     epoch, step, avg_loss, args.print_every * args.batch_size / (time.time() - t0), lr))
                 t0 = time.time()
@@ -102,10 +103,9 @@ def main(args):
                         optimizer = torch.optim.SparseAdam(model.parameters(), lr=lr)
                     prev_loss = avg_loss
             if step % args.save_every == 0:
-                with open('csv/losses.csv', 'w') as f:
+                with open(log_path, 'w') as f:
                    writer = csv.writer(f)
                    writer.writerows(logs)
-
             k, _ = divmod(step * args.batch_size, vocab_size)
             if k > epoch:
                 epoch = k

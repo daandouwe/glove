@@ -13,18 +13,20 @@ def main():
     parser.add_argument('mode', choices=['train', 'plot', 'eval', 'hogwild'])
 
     # IO arguments.
-    parser.add_argument('--name', type=str, default='text8.10k',
+    parser.add_argument('--name', type=str, default='text8',
                         help='name for model')
-    parser.add_argument('--vocab-dir', type=str, default='vocab',
+    parser.add_argument('--vocab-dir', type=str, default='data/vocab',
                         help='input path for vocabulary')
-    parser.add_argument('--matrix-dir', type=str, default='cooccur',
+    parser.add_argument('--matrix-dir', type=str, default='data/cooccur',
                         help='input path for cooccurence matrix')
     parser.add_argument('--out-dir', type=str, default='vec',
                         help='ouput directory to write vectors')
     parser.add_argument('--model-dir', type=str, default='models',
                         help='directory to save model')
+    parser.add_argument('--log-dir', type=str, default='log',
+                        help='directory log losses')
     parser.add_argument('--vec-path', type=str, default='',
-                        help='directory to save model')
+                        help='path to load vectors for plotting')
     parser.add_argument('--gensim-format', action='store_true',
                         help='save vectors in gensim format')
 
